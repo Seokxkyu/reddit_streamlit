@@ -5,6 +5,7 @@ from dotenv import load_dotenv
 import praw
 from datetime import datetime, timezone
 import pandas as pd
+import streamlit as st
 
 # ✅ 프로젝트 루트 기준 경로로 수정
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -14,12 +15,20 @@ LOG_PATH = os.path.join(BASE_DIR, "run_log.txt")
 # ✅ 루트에서 .env 명시적으로 로드
 load_dotenv(os.path.join(BASE_DIR, ".env"))
 
+# reddit = praw.Reddit(
+#     client_id=os.getenv("REDDIT_CLIENT_ID"),
+#     client_secret=os.getenv("REDDIT_CLIENT_SECRET"),
+#     password=os.getenv("REDDIT_PASSWORD"),
+#     username=os.getenv("REDDIT_USERNAME"),
+#     user_agent=os.getenv("REDDIT_USER_AGENT")
+# )
+
 reddit = praw.Reddit(
-    client_id=os.getenv("REDDIT_CLIENT_ID"),
-    client_secret=os.getenv("REDDIT_CLIENT_SECRET"),
-    password=os.getenv("REDDIT_PASSWORD"),
-    username=os.getenv("REDDIT_USERNAME"),
-    user_agent=os.getenv("REDDIT_USER_AGENT")
+    client_id=st.secrets["REDDIT_CLIENT_ID"],
+    client_secret=st.secrets["REDDIT_CLIENT_SECRET"],
+    username=st.secrets["REDDIT_USERNAME"],
+    password=st.secrets["REDDIT_PASSWORD"],
+    user_agent=st.secrets["REDDIT_USER_AGENT"]
 )
 
 LIMIT = 500
@@ -117,7 +126,7 @@ def update(keyword):
         f.write(msg)
 
     print("📝 " + msg.strip())
-    
+
 
 # ✅ 실행 시 키워드 입력 받기
 if __name__ == "__main__":
