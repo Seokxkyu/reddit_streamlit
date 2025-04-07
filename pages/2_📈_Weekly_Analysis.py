@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 from datetime import date
+import os
 
 st.set_page_config(page_title="📈 Weekly Analysis", layout="wide")
 
@@ -8,21 +9,24 @@ st.title("📈 Weekly Analysis")
 
 @st.cache_data
 def load_data():
-    hoka_sub = r"C:\Users\rootn\OneDrive\Desktop\Reddit\data\hoka_subreddit.csv"
-    other_subs = r"C:\Users\rootn\OneDrive\Desktop\Reddit\data\hoka_posts.csv"
-    
+    # Streamlit 앱 루트 기준 경로
+    hoka_sub = os.path.join("data", "hoka_subreddit.csv")
+    other_subs = os.path.join("data", "hoka_posts.csv")
+    # hoka_sub = r"C:\Users\rootn\OneDrive\Desktop\Reddit\data\hoka_subreddit.csv"
+    # other_subs = r"C:\Users\rootn\OneDrive\Desktop\Reddit\data\hoka_posts.csv"
+
     df1 = pd.read_csv(hoka_sub)
     df2 = pd.read_csv(other_subs)
-    
+
     df1["time"] = pd.to_datetime(df1["time"], errors='coerce')
     df2["time"] = pd.to_datetime(df2["time"], errors='coerce')
-    
+
     df1 = df1.dropna(subset=["time"])
     df2 = df2.dropna(subset=["time"])
-    
+
     df1["week"] = df1["time"].dt.to_period("W-SAT").apply(lambda r: r.start_time)
     df2["week"] = df2["time"].dt.to_period("W-SAT").apply(lambda r: r.start_time)
-    
+
     return df1, df2
 
 hoka_df, subreddit_df = load_data()

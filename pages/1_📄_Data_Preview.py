@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import os
 
 st.set_page_config(
     page_title="📄 Data Preview",
@@ -10,17 +11,23 @@ st.title("📄 Data Preview")
 
 @st.cache_data
 def load_data():
-    hoka_posts = r"C:\Users\rootn\OneDrive\Desktop\Reddit\data\hoka_subreddit.csv"
-    subreddit_posts = r"C:\Users\rootn\OneDrive\Desktop\Reddit\data\hoka_posts.csv"
-    posts = pd.read_csv(hoka_posts)
-    subreddits = pd.read_csv(subreddit_posts)
+    base_dir = os.path.dirname(os.path.abspath(__file__))  # 현재 파일 기준 경로
+    data_dir = os.path.join(base_dir, "..", "data")        # 상위 폴더 안의 data 폴더
+
+    hoka_posts_path = os.path.join(data_dir, "hoka_subreddit.csv")
+    subreddit_posts_path = os.path.join(data_dir, "hoka_posts.csv")
+
+    posts = pd.read_csv(hoka_posts_path)
+    subreddits = pd.read_csv(subreddit_posts_path)
+    # posts = r"C:\Users\rootn\OneDrive\Desktop\Reddit\data\hoka_subreddit.csv"
+    # subreddits = r"C:\Users\rootn\OneDrive\Desktop\Reddit\data\hoka_posts.csv"
     
     posts["time"] = pd.to_datetime(posts["time"], errors="coerce")
     subreddits["time"] = pd.to_datetime(subreddits["time"], errors="coerce")
+    
     return posts, subreddits
 
 hoka_posts, subreddit_posts = load_data()
-
 tab1, tab2 = st.tabs(["📄 Hoka Posts", "📄 Subreddits"])
 
 # ✅ Hoka Posts Tab
