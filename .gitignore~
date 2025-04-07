@@ -1,2 +1,4 @@
 *.un~
 *~
+run_log.txt
+data/
