@@ -1,25 +1,45 @@
 import os
 import time
-from dotenv import load_dotenv
-import praw
 from datetime import datetime, timedelta, timezone
 import pandas as pd
+import praw
+from dotenv import load_dotenv
 
 # ✅ 루트 기준 경로
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# ✅ 환경 변수 로드: Streamlit 우선, 없으면 .env 처리
+try:
+    import streamlit as st
+    required_keys = ["REDDIT_CLIENT_ID", "REDDIT_CLIENT_SECRET", "PASSWORD", "USERNAME", "REDDIT_USER_AGENT"]
+    if hasattr(st, "secrets") and all(key in st.secrets for key in required_keys):
+        secrets = st.secrets
+    else:
+        raise ImportError("Streamlit secrets not configured properly.")
+except Exception as e:
+    load_dotenv(os.path.join(BASE_DIR, ".env"))
+    secrets = {}
+    missing = []
+    for key in ["REDDIT_CLIENT_ID", "REDDIT_CLIENT_SECRET", "PASSWORD", "USERNAME", "REDDIT_USER_AGENT"]:
+        value = os.environ.get(key)
+        if not value:
+            missing.append(key)
+        secrets[key] = value
+    if missing:
+        raise ValueError(f"Missing environment variables: {', '.join(missing)}")
+
+# ✅ 경로 설정
 DATA_DIR = os.path.join(BASE_DIR, "data")
 CSV_PATH = os.path.join(DATA_DIR, "hoka_posts.csv")
 LOG_PATH = os.path.join(BASE_DIR, "run_log.txt")
 
-# ✅ .env 루트에서 불러오기
-load_dotenv(os.path.join(BASE_DIR, ".env"))
-
+# ✅ PRAW 인스턴스 생성
 reddit = praw.Reddit(
-    client_id=os.getenv("REDDIT_CLIENT_ID"),
-    client_secret=os.getenv("REDDIT_CLIENT_SECRET"),
-    password=os.getenv("REDDIT_PASSWORD"),
-    username=os.getenv("REDDIT_USERNAME"),
-    user_agent=os.getenv("REDDIT_USER_AGENT")
+    client_id=secrets["REDDIT_CLIENT_ID"],
+    client_secret=secrets["REDDIT_CLIENT_SECRET"],
+    password=secrets["PASSWORD"],
+    username=secrets["USERNAME"],
+    user_agent=secrets["REDDIT_USER_AGENT"]
 )
 
 KEYWORD = "hoka"
