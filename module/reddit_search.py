@@ -85,7 +85,7 @@ def update(keyword):
     with open(LOG_PATH, "a", encoding="utf-8") as f:
         f.write(msg)
 
-    print("📝 " + msg.strip())
+    print(msg.strip())
 
 # ✅ CLI 실행용
 if __name__ == "__main__":
