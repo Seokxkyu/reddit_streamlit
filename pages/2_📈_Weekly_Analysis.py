@@ -60,10 +60,10 @@ with tab1:
     weekly["post_count"] = df_filtered.groupby("week").size()
     weekly.index = pd.to_datetime(weekly.index)
 
-    st.subheader("📊 Total score and Comments count")
+    st.subheader("📊 Total Score and Comments Count")
     st.line_chart(weekly[["score", "num_comments"]])
 
-    st.subheader("📝 Posts count")
+    st.subheader("📝 Posts Count")
     st.line_chart(weekly["post_count"])
 
 with tab2:
