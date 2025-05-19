@@ -2,3 +2,6 @@ streamlit
 pandas
 python-dotenv
 praw
+beautifulsoup4
+requests
+lxml
