@@ -1,5 +1,5 @@
 *.un~
 *~
 run_log.txt
-data/
 .pyc
+.env
