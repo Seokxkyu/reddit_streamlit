@@ -1,5 +1,0 @@
-*.un~
-*~
-run_log.txt
-.pyc
-.env
